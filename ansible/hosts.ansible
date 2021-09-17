@@ -1,0 +1,7 @@
+## hosts.ansible
+
+[webserver]
+127.0.0.1
+
+[postgresql]
+127.0.1.1

@@ -1,0 +1,40 @@
+
+---
+- name: psql.yaml
+  hosts: '{{ targetgroup | default("postgresql") }}'                                                                   
+  gather_facts: yes
+  tasks:
+    - name: Deploying PostgreSQL docker container
+      docker_container:
+        name: dippy_psql_13.4
+        image: postgres:13.4
+        state: started
+        restart_policy: always
+        auto_remove: false                                        
+        container_default_behavior: no_defaults
+        env:
+          POSTGRES_PASSWORD: "silly"
+          PGDATA: /var/lib/postgresql/data/
+        published_ports:
+          - "5432:5432"
+      register: psql_cont_metadata
+
+    - name: Waiting for PostgreSQL to be ready
+      wait_for:
+        host: 127.0.0.1
+        port: 5432
+        delay: 2
+        state: drained
+        connect_timeout: 1
+        timeout: 10
+      register: pqls_running
+      when: psql_cont_metadata.changed
+
+    - name: Verifying connectivity
+      postgresql_ping:
+        db: postgres
+        login_host: localhost
+        login_user: postgres
+        login_password: "silly" 
+
+

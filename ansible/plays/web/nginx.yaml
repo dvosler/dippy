@@ -1,0 +1,50 @@
+
+---
+- name: nginx.yaml
+  hosts: '{{ targetgroup | default("webserver") }}'
+  tasks:
+    - name: Deploying NGINX docker container
+      docker_container:
+        image: nginx:stable
+        name: dippy_nginx
+        state: started
+        container_default_behavior: no_defaults
+        ports:
+          - "8080:80"
+      register: nginx_cont_metadata
+
+    - set_fact:
+        nginx_cont_ipaddr: '{{ nginx_cont_metadata["container"]["NetworkSettings"]["IPAddress"] }}'
+
+    - name: Waiting for NGINX to be ready
+      wait_for:
+        host: '{{ nginx_cont_ipaddr }}'
+        port: 80
+        delay: 2
+        timeout: 10
+
+    - name: Verifying connectivity within the container
+      uri:
+        url: 'http://{{ nginx_cont_ipaddr }}'
+        status_code: 200
+        return_content: yes
+        follow_redirects: none
+      register: container_content
+
+    - name: Verifying connectivity to container
+      uri:
+        url: 'http://{{ ansible_facts["default_ipv4"]["address"] }}:8080'
+        status_code: 200
+        return_content: yes
+        follow_redirects: none
+      register: host_content
+
+    - name: Asserting that the web content is the same
+      assert:
+        that: 
+          - '{{ container_content["content"] == host_content["content"] }}'
+          - '{{ container_content["content_length"] == host_content["content_length"] }}'
+        fail_msg: "Web page content returned by the container and host does not a match"
+        success_msg: "Web page content returned by the container and host is a match"
+
+
