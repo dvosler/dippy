@@ -18,7 +18,7 @@ Dependencies and Assumptions
 
 Usage:
 -------------------------------
-1.) Edit the _**ansible/hosts.ansible**_ file to reflect the IP(s) of the target(s)
+1.) Edit the _**ansible/hosts_ansible.yaml**_ file to reflect the IP(s) of the target(s)
 ```
 [webserver]
 127.0.0.1
@@ -38,7 +38,7 @@ Directory Structure
 .
 ├── ansible
 │   ├── ansible.cfg
-│   ├── hosts.ansible
+│   ├── hosts_ansible.yaml
 │   ├── logs
 │   │   └── dippy.log
 │   └── plays
@@ -46,13 +46,13 @@ Directory Structure
 │       │   └── psql.yaml
 │       ├── dippy.yaml
 │       └── web
-│           └── web.yaml
+│           ├── index.html
+│           └── nginx.yaml
 ├── dippy.sh
 ├── LICENSE
 ├── README.md
 └── screens
     └── dippy.png
-
 ```
 
 Etymology of Poject Name
