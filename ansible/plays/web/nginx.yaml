@@ -3,12 +3,19 @@
 - name: nginx.yaml
   hosts: '{{ targetgroup | default("webserver") }}'
   tasks:
+    - name: Updating landing page
+      copy:
+        src: index.html
+        dest: /tmp/dippy/nginx/index.html
+        mode: 644
+
     - name: Deploying NGINX docker container
       docker_container:
         image: nginx:stable
         name: dippy_nginx
         state: started
         container_default_behavior: no_defaults
+        volumes: /tmp/dippy/nginx:/usr/share/nginx/html:ro
         ports:
           - "8080:80"
       register: nginx_cont_metadata
@@ -46,5 +53,4 @@
           - '{{ container_content["content_length"] == host_content["content_length"] }}'
         fail_msg: "Web page content returned by the container and host does not a match"
         success_msg: "Web page content returned by the container and host is a match"
-
 
