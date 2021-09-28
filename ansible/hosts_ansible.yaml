@@ -1,0 +1,11 @@
+---
+
+all:
+  hosts:
+  children:
+    webserver:
+      hosts:
+        192.168.2.235:
+    postgresql:
+      hosts:
+        192.168.2.235:
