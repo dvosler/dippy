@@ -5,7 +5,7 @@ all:
   children:
     webserver:
       hosts:
-        192.168.2.235:
+        127.0.0.1:
     postgresql:
       hosts:
-        192.168.2.235:
+        127.0.1.1:
