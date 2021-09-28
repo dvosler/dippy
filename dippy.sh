@@ -22,7 +22,7 @@ case $key in
 esac
 done
 
-ansiblecommand='ansible-playbook -v ansible/plays/dippy.yaml -i ansible/hosts.ansible --user=root'
+ansiblecommand='ansible-playbook -v ansible/plays/dippy.yaml -i ansible/hosts_ansible.yaml --user=root'
 echo ""
 export ANSIBLE_CONFIG=ansible/ansible.cfg
 
