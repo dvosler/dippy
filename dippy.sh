@@ -27,5 +27,4 @@ echo ""
 export ANSIBLE_CONFIG=ansible/ansible.cfg
 
 echo "$ansiblecommand"
-eval $ansiblecommand
 
